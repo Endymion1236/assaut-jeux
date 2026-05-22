@@ -1,30 +1,35 @@
 // src/services/boardGameGeekAPI.js
-
-/**
- * Service pour accéder à l'API BoardGameGeek
- * Récupère les infos : joueurs min/max, durée, mécaniques
- */
+//
+// En dev (localhost) on appelle directement BGG.
+// En prod on passe par notre proxy Vercel /api/bgg pour contourner CORS.
 
 import { BGG_MECHANIC_MAP } from '../data/mechanics';
 
-const BGG_API = 'https://boardgamegeek.com/xmlapi2';
+const isLocalhost = typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' ||
+   window.location.hostname === '127.0.0.1');
+
+const buildUrl = (path, params) => {
+  const queryString = new URLSearchParams(params).toString();
+  if (isLocalhost) {
+    return `https://boardgamegeek.com/xmlapi2/${path}?${queryString}`;
+  }
+  return `/api/bgg?path=${path}&${queryString}`;
+};
 
 /**
  * Recherche un jeu sur BoardGameGeek par nom
- * @param {string} gameName - Nom du jeu
- * @returns {Promise<Array>} - Liste des jeux trouvés
  */
 export async function searchBoardGame(gameName) {
   try {
     const response = await fetch(
-      `${BGG_API}/search?query=${encodeURIComponent(gameName)}&type=boardgame`
+      buildUrl('search', { query: gameName, type: 'boardgame' })
     );
     const text = await response.text();
-    
-    // Parse XML
+
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(text, 'text/xml');
-    
+
     if (xmlDoc.getElementsByTagName('item').length === 0) {
       return [];
     }
@@ -54,25 +59,23 @@ export async function searchBoardGame(gameName) {
 
 /**
  * Récupère les infos détaillées d'un jeu
- * @param {string} gameId - ID BoardGameGeek du jeu
- * @returns {Promise<Object>} - Infos du jeu (joueurs, durée, mécaniques)
  */
 export async function getBoardGameDetails(gameId) {
   try {
     const response = await fetch(
-      `${BGG_API}/thing?id=${gameId}&stats=1`
+      buildUrl('thing', { id: gameId, stats: '1' })
     );
     const text = await response.text();
-    
+
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(text, 'text/xml');
-    
+
     const item = xmlDoc.getElementsByTagName('item')[0];
     if (!item) {
       throw new Error('Game not found');
     }
 
-    // Récupère le nom primaire (BGG renvoie plusieurs noms : primary + alternates)
+    // Nom primaire
     let name = '';
     const nameElements = item.getElementsByTagName('name');
     for (let i = 0; i < nameElements.length; i++) {
@@ -85,11 +88,11 @@ export async function getBoardGameDetails(gameId) {
       name = nameElements[0].getAttribute('value') || nameElements[0].textContent || '';
     }
 
-    // Description (BGG la renvoie avec des entités HTML qu'il faut décoder)
+    // Description
     const rawDescription = item.getElementsByTagName('description')[0]?.textContent || '';
     const description = decodeHtmlEntities(rawDescription);
-    
-    // Helpers pour lire les valeurs (BGG xmlapi2 les met dans des attributs "value")
+
+    // Helpers
     const readInt = (tag, fallback) => {
       const el = item.getElementsByTagName(tag)[0];
       if (!el) return fallback;
@@ -98,14 +101,11 @@ export async function getBoardGameDetails(gameId) {
       return Number.isFinite(n) ? n : fallback;
     };
 
-    // Joueurs
     const minPlayers = readInt('minplayers', 1);
     const maxPlayers = readInt('maxplayers', 4);
-
-    // Durée de jeu
     const playingTime = readInt('playingtime', 30);
-    
-    // Mécaniques et catégories : BGG xmlapi2 utilise <link type="boardgamemechanic" value="...">
+
+    // Mécaniques + catégories
     const mechanics = [];
     const categories = [];
     const linkElements = item.getElementsByTagName('link');
@@ -116,13 +116,11 @@ export async function getBoardGameDetails(gameId) {
       if (type === 'boardgamecategory') categories.push(value);
     }
 
-    // Moyenne de notes
     const averageEl = item.getElementsByTagName('average')[0];
     const averageRating = parseFloat(
       averageEl?.getAttribute('value') || averageEl?.textContent || '0'
     );
 
-    // Année de publication
     const yearPublished = readInt('yearpublished', new Date().getFullYear());
 
     return {
@@ -143,9 +141,6 @@ export async function getBoardGameDetails(gameId) {
   }
 }
 
-/**
- * Décode les entités HTML que BGG renvoie dans la description
- */
 function decodeHtmlEntities(str) {
   if (!str) return '';
   const txt = document.createElement('textarea');
@@ -153,9 +148,6 @@ function decodeHtmlEntities(str) {
   return txt.value.replace(/&#10;/g, '\n').trim();
 }
 
-/**
- * Tronque proprement à la fin d'une phrase
- */
 function truncate(str, maxLen) {
   if (!str || str.length <= maxLen) return str;
   const cut = str.substring(0, maxLen);
@@ -165,9 +157,6 @@ function truncate(str, maxLen) {
 
 /**
  * Convertit les mécaniques + catégories BGG en types internes (IDs).
- * @param {string[]} mechanics - mécaniques BGG (anglais)
- * @param {string[]} categories - catégories BGG (anglais)
- * @returns {string[]} IDs internes (ex: ['strategie', 'gestion'])
  */
 export function convertMechanicsToTypes(mechanics = [], categories = []) {
   const types = new Set();
@@ -187,8 +176,6 @@ export function convertMechanicsToTypes(mechanics = [], categories = []) {
 
 /**
  * Formatage du temps de jeu en string lisible
- * @param {number} minutes - Durée en minutes
- * @returns {string} - Formaté (ex: "45-60 min")
  */
 export function formatPlayingTime(minutes) {
   if (minutes < 15) return '10-15 min';
