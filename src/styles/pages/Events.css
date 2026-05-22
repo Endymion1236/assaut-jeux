@@ -1,149 +1,236 @@
-/* src/styles/pages/Profile.css */
+/* src/styles/pages/Events.css */
 
-.profile-page {
-  max-width: 800px;
+.events-page {
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-.profile-header {
+.events-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 30px;
-  background: white;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: var(--shadow);
-  margin-bottom: 30px;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: bold;
-}
-
-.profile-header .user-info h1 {
-  color: var(--primary);
-  margin-bottom: 5px;
-}
-
-.profile-header .user-info p {
-  color: #888;
-  font-size: 14px;
-}
-
-.profile-card {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: var(--shadow);
-  margin-bottom: 30px;
-}
-
-.profile-card h2 {
-  color: var(--primary);
-  margin-bottom: 20px;
-  font-size: 20px;
-}
-
-.profile-card p {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.profile-card textarea {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #E0E0E0;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-}
-
-.preferences-grid {
-  display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-.pref-tag {
-  padding: 8px 16px;
-  border: 2px solid #E0E0E0;
-  background: white;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 13px;
-  transition: all 0.3s ease;
-  color: var(--dark);
-}
-
-.pref-tag:hover {
-  border-color: var(--secondary);
-  color: var(--secondary);
-}
-
-.pref-tag.active {
-  background: linear-gradient(135deg, var(--secondary), rgba(78, 205, 196, 0.6));
-  color: white;
-  border-color: transparent;
-}
-
-/* src/styles/pages/Events.css */
-
-.events-page h1 {
-  color: var(--primary);
-  margin-bottom: 30px;
+.events-header h1 {
+  color: var(--navy);
   font-size: 32px;
+  margin: 0;
 }
 
+/* === FORMULAIRE === */
 .event-form {
   background: white;
-  padding: 30px;
-  border-radius: 15px;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 32px;
   box-shadow: var(--shadow);
-  margin-bottom: 30px;
+  overflow: hidden;
 }
 
-.event-form form {
-  display: flex;
-  flex-direction: column;
+.event-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-.event-form input,
-.event-form textarea {
-  padding: 12px;
-  border: 2px solid #E0E0E0;
-  border-radius: 8px;
-  font-family: inherit;
+@media (max-width: 600px) {
+  .event-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === SECTIONS === */
+.events-section {
+  margin-bottom: 40px;
+}
+
+.events-section h2 {
+  color: var(--navy);
+  font-size: 22px;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+
+.events-section.events-past {
+  opacity: 0.85;
+}
+
+.events-section.events-past h2 {
+  color: var(--text-muted);
+}
+
+.muted {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 16px 0;
+}
+
+.events-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* === GRID === */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* === CARD === */
+.event-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px 22px 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-left: 5px solid var(--teal);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.event-card.past {
+  border-left-color: var(--border);
+  opacity: 0.85;
+}
+
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.event-card h3 {
+  color: var(--navy);
+  font-size: 19px;
+  margin: 0;
+  line-height: 1.25;
+  flex: 1;
+}
+
+.event-delete {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  display: flex;
+}
+
+.event-delete:hover:not(:disabled) {
+  background: rgba(199, 62, 62, 0.1);
+  color: var(--red);
+}
+
+.event-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* === META === */
+.event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.event-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
+  color: var(--text);
 }
 
-.event-form input:focus,
-.event-form textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+.event-meta-row svg {
+  flex-shrink: 0;
+  color: var(--teal);
 }
 
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
+.event-description {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+  padding: 12px 14px;
+  background: var(--bg-alt);
+  border-radius: 8px;
+}
 
-  .event-form form > div[style*="grid"] {
-    grid-template-columns: 1fr !important;
-  }
+.event-organizer {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.event-organizer strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.event-participants {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+
+.event-participants strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* === ACTIONS === */
+.event-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.event-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+.event-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Boutons : surcharge légère pour adapter les icones */
+.event-card .btn-primary {
+  background: var(--teal);
+}
+
+.event-card .btn-primary:hover:not(:disabled) {
+  background: #1c8077;
+}
+
+.event-card .btn-secondary {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.event-card .btn-secondary:hover {
+  background: var(--teal);
+  color: white;
 }
