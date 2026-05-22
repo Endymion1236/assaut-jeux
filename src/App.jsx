@@ -18,7 +18,7 @@ import './styles/App.css';
 
 // Emails autorisés à accéder à l'admin
 const ADMIN_EMAILS = [
-  'admin@assaut-des-jeux.fr',
+  'nicolasrichard16@hotmail.com',
   // nicolasrichard16@hotmail.com
 ];
 
