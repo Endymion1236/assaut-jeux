@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1200 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <style>
+      .letter { font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; }
+      .tagline { font-family: Arial, sans-serif; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Arc de cercle en haut -->
+  <path d="M 150 350 Q 600 80 1050 350" 
+        stroke="#001F47" 
+        stroke-width="80" 
+        fill="none" 
+        stroke-linecap="round"/>
+
+  <!-- LETTRES -->
+  
+  <!-- A - Bleu foncé -->
+  <g>
+    <!-- Corps du A -->
+    <path d="M 100 280 L 220 700 L 320 700 L 440 280 Z" fill="#001F47"/>
+    <!-- Barre du A -->
+    <rect x="140" y="480" width="220" height="60" fill="white"/>
+    <!-- Pion blanc dans le A -->
+    <circle cx="270" cy="380" r="75" fill="white" opacity="0.9"/>
+  </g>
+
+  <!-- L - Teal -->
+  <g>
+    <!-- Corps du L -->
+    <rect x="380" y="280" width="100" height="420" fill="#1A9B8E" rx="15"/>
+  </g>
+
+  <!-- A - Orange/Jaune -->
+  <g>
+    <!-- Corps du A -->
+    <path d="M 560 280 L 680 700 L 780 700 L 900 280 Z" fill="#F5A623"/>
+    <!-- Barre du A -->
+    <rect x="600" y="480" width="220" height="60" fill="white"/>
+  </g>
+
+  <!-- D - Rouge -->
+  <g>
+    <!-- Corps du D -->
+    <rect x="950" y="280" width="110" height="420" fill="#B81A1A" rx="25"/>
+    <!-- Courbe du D -->
+    <ellipse cx="1055" cy="490" rx="95" ry="150" fill="white"/>
+  </g>
+
+  <!-- J - Violet -->
+  <g>
+    <!-- Haut du J -->
+    <rect x="1120" y="280" width="110" height="250" fill="#512D5E" rx="15"/>
+    <!-- Courbe du J -->
+    <path d="M 1130 530 Q 1130 620 1195 650 Q 1240 650 1250 600" 
+          stroke="#512D5E" 
+          stroke-width="100" 
+          fill="none" 
+          stroke-linecap="round"/>
+  </g>
+
+  <!-- ÉLÉMENTS DE JEUX -->
+  
+  <!-- Dé bleu (gauche) -->
+  <g>
+    <!-- Corps du dé -->
+    <rect x="250" y="780" width="140" height="140" fill="#2A6F8F" rx="12"/>
+    <!-- Points blancs du dé -->
+    <circle cx="280" cy="810" r="14" fill="white"/>
+    <circle cx="305" cy="835" r="14" fill="white"/>
+    <circle cx="280" cy="860" r="14" fill="white"/>
+    <circle cx="330" cy="860" r="14" fill="white"/>
+    <circle cx="330" cy="810" r="14" fill="white"/>
+  </g>
+
+  <!-- Pion jaune/orange (centre-gauche) -->
+  <g>
+    <!-- Base du pion -->
+    <ellipse cx="470" cy="880" rx="80" ry="50" fill="#F5A623"/>
+    <!-- Corps du pion -->
+    <ellipse cx="470" cy="810" rx="70" ry="85" fill="#F5A623"/>
+    <!-- Tête du pion -->
+    <circle cx="470" cy="750" r="60" fill="#F5A623"/>
+    <!-- Ombre interne -->
+    <circle cx="470" cy="740" r="35" fill="#E8950F" opacity="0.6"/>
+  </g>
+
+  <!-- Dé rouge (droite) -->
+  <g>
+    <!-- Corps du dé -->
+    <rect x="730" y="780" width="140" height="140" fill="#B81A1A" rx="12"/>
+    <!-- Points blancs du dé -->
+    <circle cx="760" cy="810" r="14" fill="white"/>
+    <circle cx="785" cy="835" r="14" fill="white"/>
+    <circle cx="760" cy="860" r="14" fill="white"/>
+    <circle cx="810" cy="860" r="14" fill="white"/>
+    <circle cx="810" cy="810" r="14" fill="white"/>
+    <circle cx="835" cy="885" r="14" fill="white"/>
+  </g>
+
+  <!-- Pion violet (droite) -->
+  <g>
+    <!-- Base du pion -->
+    <ellipse cx="950" cy="880" rx="70" ry="45" fill="#512D5E"/>
+    <!-- Corps du pion -->
+    <ellipse cx="950" cy="815" rx="60" ry="75" fill="#512D5E"/>
+    <!-- Tête du pion -->
+    <circle cx="950" cy="755" r="55" fill="#512D5E"/>
+    <!-- Ombre interne -->
+    <circle cx="950" cy="745" r="30" fill="#3D1F47" opacity="0.7"/>
+  </g>
+
+  <!-- Traits décoratifs en bas (gauche et droite) -->
+  <path d="M 200 1000 L 250 1020 L 220 1040" 
+        stroke="#001F47" 
+        stroke-width="30" 
+        fill="none" 
+        stroke-linecap="round"/>
+  
+  <path d="M 1000 1000 L 950 1020 L 980 1040" 
+        stroke="#001F47" 
+        stroke-width="30" 
+        fill="none" 
+        stroke-linecap="round"/>
+
+  <!-- TEXTE EN BAS -->
+  <text x="600" y="1080" 
+        class="tagline" 
+        font-size="80" 
+        text-anchor="middle" 
+        fill="#001F47" 
+        letter-spacing="8">
+    À L'ASSAUT DES JEUX
+  </text>
+
+  <!-- Petits tirets décoratifs autour du texte -->
+  <line x1="150" y1="1050" x2="220" y2="1050" stroke="#001F47" stroke-width="20" stroke-linecap="round"/>
+  <line x1="980" y1="1050" x2="1050" y2="1050" stroke="#001F47" stroke-width="20" stroke-linecap="round"/>
+</svg>

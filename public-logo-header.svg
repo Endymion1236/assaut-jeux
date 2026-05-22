@@ -1,0 +1,43 @@
+<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <!-- Lettres avec couleurs -->
+  
+  <!-- A en bleu foncé -->
+  <g>
+    <text x="20" y="90" font-size="80" font-weight="bold" font-family="Arial, sans-serif" fill="#001f47">A</text>
+    <!-- Pion blanc dans le A -->
+    <circle cx="45" cy="55" r="20" fill="white" opacity="0.8"/>
+  </g>
+  
+  <!-- L en teal -->
+  <text x="85" y="90" font-size="80" font-weight="bold" font-family="Arial, sans-serif" fill="#1a9b8e">L</text>
+  
+  <!-- A en orange -->
+  <text x="130" y="90" font-size="80" font-weight="bold" font-family="Arial, sans-serif" fill="#f5a623">A</text>
+  
+  <!-- D en rouge -->
+  <text x="175" y="90" font-size="80" font-weight="bold" font-family="Arial, sans-serif" fill="#b81a1a">D</text>
+  
+  <!-- J en violet -->
+  <text x="230" y="90" font-size="80" font-weight="bold" font-family="Arial, sans-serif" fill="#512d5e">J</text>
+  
+  <!-- Petits éléments de jeux en bas -->
+  <!-- Dé bleu -->
+  <g transform="translate(290, 50)">
+    <rect width="20" height="20" fill="#2a6f8f" rx="2"/>
+    <circle cx="7" cy="7" r="1.5" fill="white"/>
+    <circle cx="13" cy="13" r="1.5" fill="white"/>
+  </g>
+  
+  <!-- Pion orange -->
+  <g transform="translate(320, 50)">
+    <circle cx="10" cy="8" r="8" fill="#f5a623"/>
+    <ellipse cx="10" cy="15" rx="8" ry="5" fill="#f5a623"/>
+  </g>
+  
+  <!-- Dé rouge -->
+  <g transform="translate(350, 50)">
+    <rect width="20" height="20" fill="#b81a1a" rx="2"/>
+    <circle cx="7" cy="7" r="1.5" fill="white"/>
+    <circle cx="13" cy="13" r="1.5" fill="white"/>
+  </g>
+</svg>
