@@ -24,7 +24,9 @@ export default function Admin({ user }) {
     duration: '30 min',
     description: '',
     types: [],
-    bggId: ''
+    bggId: '',
+    image: '',
+    thumbnail: ''
   });
 
   const toggleMechanic = (id) => {
@@ -90,7 +92,9 @@ export default function Admin({ user }) {
         duration: formatPlayingTime(details.playingTime),
         description: details.description,
         types: types,
-        bggId: bggGame.id
+        bggId: bggGame.id,
+        image: details.image || '',
+        thumbnail: details.thumbnail || '',
       }));
 
       setSearchResults([]);
@@ -151,7 +155,9 @@ export default function Admin({ user }) {
       duration: game.duration,
       description: game.description,
       types: game.types || [],
-      bggId: game.bggId || ''
+      bggId: game.bggId || '',
+      image: game.image || '',
+      thumbnail: game.thumbnail || '',
     });
     setEditingId(game.id);
     setShowForm(true);
@@ -180,7 +186,9 @@ export default function Admin({ user }) {
       duration: '30 min',
       description: '',
       types: [],
-      bggId: ''
+      bggId: '',
+    image: '',
+    thumbnail: ''
     });
     setEditingId(null);
     setShowForm(false);
@@ -248,6 +256,25 @@ export default function Admin({ user }) {
 
           {/* FORMULAIRE MANUEL */}
           <form onSubmit={handleSubmit} className="admin-form">
+            {(formData.image || formData.thumbnail) && (
+              <div className="image-preview">
+                <img
+                  src={formData.thumbnail || formData.image}
+                  alt={formData.name || 'Aperçu'}
+                />
+                <div>
+                  <small>Image récupérée de BGG</small>
+                  <button
+                    type="button"
+                    className="btn-small btn-link"
+                    onClick={() => setFormData(prev => ({ ...prev, image: '', thumbnail: '' }))}
+                  >
+                    Retirer l'image
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="form-row">
               <div className="form-group">
                 <label>Nom du jeu *</label>
@@ -262,7 +289,7 @@ export default function Admin({ user }) {
               </div>
 
               <div className="form-group">
-                <label>Emoji 🎲</label>
+                <label>Emoji (fallback si pas d'image)</label>
                 <input
                   type="text"
                   name="emoji"

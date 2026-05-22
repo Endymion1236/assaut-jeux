@@ -19,7 +19,6 @@ export default function Header({ user, isAdmin = false }) {
   };
 
   const isActive = (path) => location.pathname === path ? 'active' : '';
-
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
@@ -50,6 +49,9 @@ export default function Header({ user, isAdmin = false }) {
           </Link>
           <Link to="/profile" className={`nav-link ${isActive('/profile')}`} onClick={closeMobileMenu}>
             👤 Profil
+          </Link>
+          <Link to="/a-propos" className={`nav-link ${isActive('/a-propos')}`} onClick={closeMobileMenu}>
+            ℹ️ À propos
           </Link>
 
           {isAdmin && (

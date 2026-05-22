@@ -12,6 +12,8 @@ import Profile from './pages/Profile';
 import Events from './pages/Events';
 import Catalog from './pages/Catalog';
 import EventDetail from './pages/EventDetail';
+import GameDetail from './pages/GameDetail';
+import About from './pages/About';
 import Admin from './pages/Admin';
 
 import './styles/App.css';
@@ -19,6 +21,7 @@ import './styles/App.css';
 // Emails autorisés à accéder à l'admin (comparaison insensible à la casse)
 const ADMIN_EMAILS = [
   'nicolasrichard16@hotmail.com',
+  'memo12a@yahoo.fr',
   'admin@assaut-des-jeux.fr',
 ];
 
@@ -69,6 +72,8 @@ function App() {
           <Route path="/events" element={<Events user={currentUser} isAdmin={isAdmin} />} />
           <Route path="/events/:eventId" element={<EventDetail user={currentUser} />} />
           <Route path="/catalog" element={<Catalog user={currentUser} />} />
+          <Route path="/games/:gameId" element={<GameDetail user={currentUser} />} />
+          <Route path="/a-propos" element={<About />} />
           <Route
             path="/admin"
             element={isAdmin ? <Admin user={currentUser} /> : <Navigate to="/" replace />}

@@ -1,7 +1,7 @@
 // src/services/boardGameGeekAPI.js
 //
 // En dev (localhost) on appelle directement BGG.
-// En prod on passe par notre proxy Vercel /api/bgg pour contourner CORS.
+// En prod on passe par notre proxy Vercel /api/bgg pour contourner CORS + auth.
 
 import { BGG_MECHANIC_MAP } from '../data/mechanics';
 
@@ -17,22 +17,14 @@ const buildUrl = (path, params) => {
   return `/api/bgg?path=${path}&${queryString}`;
 };
 
-/**
- * Recherche un jeu sur BoardGameGeek par nom
- */
 export async function searchBoardGame(gameName) {
   try {
-    const response = await fetch(
-      buildUrl('search', { query: gameName, type: 'boardgame' })
-    );
+    const response = await fetch(buildUrl('search', { query: gameName, type: 'boardgame' }));
     const text = await response.text();
-
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(text, 'text/xml');
 
-    if (xmlDoc.getElementsByTagName('item').length === 0) {
-      return [];
-    }
+    if (xmlDoc.getElementsByTagName('item').length === 0) return [];
 
     const results = [];
     const items = xmlDoc.getElementsByTagName('item');
@@ -57,23 +49,15 @@ export async function searchBoardGame(gameName) {
   }
 }
 
-/**
- * Récupère les infos détaillées d'un jeu
- */
 export async function getBoardGameDetails(gameId) {
   try {
-    const response = await fetch(
-      buildUrl('thing', { id: gameId, stats: '1' })
-    );
+    const response = await fetch(buildUrl('thing', { id: gameId, stats: '1' }));
     const text = await response.text();
-
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(text, 'text/xml');
 
     const item = xmlDoc.getElementsByTagName('item')[0];
-    if (!item) {
-      throw new Error('Game not found');
-    }
+    if (!item) throw new Error('Game not found');
 
     // Nom primaire
     let name = '';
@@ -88,11 +72,16 @@ export async function getBoardGameDetails(gameId) {
       name = nameElements[0].getAttribute('value') || nameElements[0].textContent || '';
     }
 
+    // Images BGG : <image> (haute résolution) et <thumbnail> (petite)
+    const imageEl = item.getElementsByTagName('image')[0];
+    const thumbnailEl = item.getElementsByTagName('thumbnail')[0];
+    const image = imageEl ? imageEl.textContent.trim() : '';
+    const thumbnail = thumbnailEl ? thumbnailEl.textContent.trim() : '';
+
     // Description
     const rawDescription = item.getElementsByTagName('description')[0]?.textContent || '';
     const description = decodeHtmlEntities(rawDescription);
 
-    // Helpers
     const readInt = (tag, fallback) => {
       const el = item.getElementsByTagName(tag)[0];
       if (!el) return fallback;
@@ -126,14 +115,16 @@ export async function getBoardGameDetails(gameId) {
     return {
       bggId: gameId,
       name,
-      description: truncate(description, 400),
+      description: truncate(description, 600),
+      image,
+      thumbnail,
       minPlayers,
       maxPlayers,
       playingTime,
       mechanics,
       categories,
       averageRating,
-      yearPublished
+      yearPublished,
     };
   } catch (error) {
     console.error('Erreur fetch détails BGG:', error);
@@ -155,9 +146,6 @@ function truncate(str, maxLen) {
   return (lastDot > maxLen * 0.6 ? cut.substring(0, lastDot + 1) : cut + '…');
 }
 
-/**
- * Convertit les mécaniques + catégories BGG en types internes (IDs).
- */
 export function convertMechanicsToTypes(mechanics = [], categories = []) {
   const types = new Set();
   const allTags = [...(mechanics || []), ...(categories || [])];
@@ -174,9 +162,6 @@ export function convertMechanicsToTypes(mechanics = [], categories = []) {
   return Array.from(types).slice(0, 4);
 }
 
-/**
- * Formatage du temps de jeu en string lisible
- */
 export function formatPlayingTime(minutes) {
   if (minutes < 15) return '10-15 min';
   if (minutes < 30) return '15-30 min';

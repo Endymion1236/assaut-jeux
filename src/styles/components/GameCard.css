@@ -1,132 +1,159 @@
 /* src/styles/components/GameCard.css */
 
+.game-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
 .game-card {
   background: white;
-  border-radius: 15px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: all 0.3s ease;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .game-card:hover {
-  transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
 }
 
-.game-header {
+/* === ZONE VISUELLE === */
+.game-visual {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--navy-light) 100%);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  justify-content: center;
+  overflow: hidden;
 }
 
-.game-emoji {
-  font-size: 40px;
+.game-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
+.game-emoji-large {
+  font-size: 72px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* === BOUTON FAVORI === */
 .favorite-btn {
-  background: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.95);
   border: none;
-  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 20px;
-  padding: 0;
-  transition: all 0.3s ease;
-  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 0.15s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.favorite-btn:hover {
-  opacity: 1;
+.favorite-btn:hover:not(:disabled) {
+  color: var(--red);
 }
 
 .favorite-btn.active {
-  color: var(--accent);
+  color: var(--red);
+}
+
+.favorite-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* === CORPS === */
+.game-body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
 }
 
 .game-title {
-  font-size: 18px;
-  color: var(--primary);
-  margin: 0 20px 10px 20px;
-  font-weight: bold;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0;
+  line-height: 1.3;
 }
 
 .game-description {
-  font-size: 14px;
-  color: #666;
-  margin: 0 20px;
+  color: var(--text-muted);
+  font-size: 13px;
   line-height: 1.5;
-  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
 }
 
 .game-meta {
   display: flex;
-  gap: 15px;
-  margin: 15px 20px;
-  font-size: 13px;
-  color: #888;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .meta-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .game-types {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 20px;
-  padding: 10px 0;
-  border-top: 1px solid #F0F0F0;
-  border-bottom: 1px solid #F0F0F0;
+  gap: 6px;
 }
 
 .type-badge {
-  display: inline-block;
-  background: rgba(78, 205, 196, 0.1);
-  color: var(--secondary);
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 12px;
+  background: var(--bg-alt);
+  color: var(--navy);
+  font-size: 11px;
+  padding: 4px 9px;
+  border-radius: 10px;
   font-weight: 500;
 }
 
+/* === MATCH BAR === */
 .match-bar {
-  margin: 15px 20px;
-  padding-bottom: 20px;
+  margin-top: 6px;
+  position: relative;
+  background: var(--bg-alt);
   border-radius: 10px;
+  height: 22px;
   overflow: hidden;
 }
 
 .match-fill {
-  height: 8px;
-  background: linear-gradient(90deg, var(--secondary), var(--accent));
-  border-radius: 4px;
-  margin-bottom: 8px;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, var(--teal), var(--yellow));
+  height: 100%;
+  border-radius: 10px;
 }
 
 .match-text {
-  font-size: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
   font-weight: 600;
-  color: var(--secondary);
-}
-
-@media (max-width: 480px) {
-  .game-emoji {
-    font-size: 32px;
-  }
-
-  .game-title {
-    font-size: 16px;
-  }
-
-  .game-description {
-    font-size: 13px;
-  }
+  color: var(--navy);
 }
