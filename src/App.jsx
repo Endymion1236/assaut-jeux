@@ -22,6 +22,7 @@ import './styles/App.css';
 const ADMIN_EMAILS = [
   'nicolasrichard16@hotmail.com',
   'memo12a@yahoo.fr',
+  'matthieu.quennet@gmail.com',
   'admin@assaut-des-jeux.fr',
 ];
 
