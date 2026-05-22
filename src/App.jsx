@@ -16,18 +16,21 @@ import Admin from './pages/Admin';
 
 import './styles/App.css';
 
-// Emails autorisés à accéder à l'admin
+// Emails autorisés à accéder à l'admin (comparaison insensible à la casse)
 const ADMIN_EMAILS = [
   'nicolasrichard16@hotmail.com',
-  // nicolasrichard16@hotmail.com
+  'admin@assaut-des-jeux.fr',
 ];
+
+const isAdminEmail = (email) =>
+  !!email && ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.toLowerCase());
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
 
-  const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
+  const isAdmin = currentUser && isAdminEmail(currentUser.email);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -63,7 +66,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home user={currentUser} />} />
           <Route path="/profile" element={<Profile user={currentUser} />} />
-          <Route path="/events" element={<Events user={currentUser} />} />
+          <Route path="/events" element={<Events user={currentUser} isAdmin={isAdmin} />} />
           <Route path="/events/:eventId" element={<EventDetail user={currentUser} />} />
           <Route path="/catalog" element={<Catalog user={currentUser} />} />
           <Route
