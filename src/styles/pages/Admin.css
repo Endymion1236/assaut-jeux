@@ -432,3 +432,56 @@
     transform: rotate(360deg);
   }
 }
+
+/* === MECHANICS PICKER === */
+.form-hint {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.mechanics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.mechanic-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f7f7f9;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.mechanic-chip:hover {
+  background: #eef0f5;
+}
+
+.mechanic-chip.checked {
+  background: rgba(255, 107, 107, 0.12);
+  border-color: var(--navy);
+}
+
+.mechanic-chip input[type="checkbox"] {
+  display: none;
+}
+
+.mechanic-emoji {
+  font-size: 20px;
+}
+
+.mechanic-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.mechanic-chip.checked .mechanic-label {
+  color: var(--navy);
+}

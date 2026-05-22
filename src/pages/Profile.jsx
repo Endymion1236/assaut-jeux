@@ -1,13 +1,12 @@
 // src/pages/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db, auth } from '../config/firebase';
-import { gameTypes } from '../data/games';
+import { db } from '../config/firebase';
+import { MECHANICS } from '../data/mechanics';
 import { motion } from 'framer-motion';
 import '../styles/pages/Profile.css';
 
 export default function Profile({ user }) {
-  const [userData, setUserData] = useState(null);
   const [preferences, setPreferences] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState('');
@@ -18,7 +17,6 @@ export default function Profile({ user }) {
       try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
-          setUserData(userDoc.data());
           setPreferences(userDoc.data().preferences || []);
           setBio(userDoc.data().bio || '');
         }
@@ -96,23 +94,24 @@ export default function Profile({ user }) {
       </div>
 
       <div className="profile-card">
-        <h2>Mes préférences</h2>
+        <h2>Mes mécaniques préférées</h2>
+        <p style={{ color: '#777', fontSize: '14px', marginBottom: '15px' }}>
+          Coche les types de jeux que tu aimes pour recevoir de meilleures recommandations.
+        </p>
         <div className="preferences-grid">
-          {gameTypes.map(type => (
+          {MECHANICS.map(m => (
             <button
-              key={type}
-              className={`pref-tag ${preferences.includes(type) ? 'active' : ''}`}
-              onClick={() => togglePreference(type)}
+              key={m.id}
+              className={`pref-tag ${preferences.includes(m.id) ? 'active' : ''}`}
+              onClick={() => togglePreference(m.id)}
             >
-              {type}
+              {m.emoji} {m.label}
             </button>
           ))}
         </div>
-        {isEditing && (
-          <button className="btn btn-primary" style={{ marginTop: '20px' }} onClick={saveChanges}>
-            Enregistrer préférences
-          </button>
-        )}
+        <button className="btn btn-primary" style={{ marginTop: '20px' }} onClick={saveChanges}>
+          Enregistrer mes préférences
+        </button>
       </div>
     </motion.div>
   );

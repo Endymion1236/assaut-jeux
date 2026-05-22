@@ -1,7 +1,8 @@
 // src/pages/Catalog.jsx
 import React, { useState, useMemo } from 'react';
-import { games, gameTypes } from '../data/games';
-import { searchGames } from '../utils/gameRecommendations';
+import { games as seedGames } from '../data/games';
+import { MECHANICS } from '../data/mechanics';
+import { useGames } from '../hooks/useGames';
 import GameCard from '../components/GameCard';
 import { motion } from 'framer-motion';
 import '../styles/pages/Catalog.css';
@@ -11,30 +12,38 @@ export default function Catalog() {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [playerFilter, setPlayerFilter] = useState(0);
 
+  // Charge les jeux depuis Firestore (temps réel) avec fallback sur le seed
+  const { games: liveGames, loading } = useGames();
+  const games = (liveGames && liveGames.length > 0) ? liveGames : seedGames;
+
   const filteredGames = useMemo(() => {
     let results = games;
 
-    // Recherche par texte
+    // Recherche par texte (nom + description)
     if (searchQuery) {
-      results = searchGames(searchQuery);
+      const q = searchQuery.toLowerCase();
+      results = results.filter(g =>
+        (g.name || '').toLowerCase().includes(q) ||
+        (g.description || '').toLowerCase().includes(q)
+      );
     }
 
-    // Filtre par types
+    // Filtre par mécaniques (au moins une commune)
     if (selectedTypes.length > 0) {
       results = results.filter(game =>
-        selectedTypes.some(type => game.types.includes(type))
+        selectedTypes.some(type => (game.types || []).includes(type))
       );
     }
 
     // Filtre par nombre de joueurs
     if (playerFilter > 0) {
       results = results.filter(game =>
-        playerFilter >= game.minPlayers && playerFilter <= game.maxPlayers
+        playerFilter >= (game.minPlayers || 1) && playerFilter <= (game.maxPlayers || 99)
       );
     }
 
     return results;
-  }, [searchQuery, selectedTypes, playerFilter]);
+  }, [games, searchQuery, selectedTypes, playerFilter]);
 
   const toggleTypeFilter = (type) => {
     setSelectedTypes(prev =>
@@ -42,6 +51,12 @@ export default function Catalog() {
         ? prev.filter(t => t !== type)
         : [...prev, type]
     );
+  };
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedTypes([]);
+    setPlayerFilter(0);
   };
 
   return (
@@ -79,15 +94,15 @@ export default function Catalog() {
           </div>
 
           <div className="filter-group">
-            <h3>Types de jeux</h3>
+            <h3>Mécaniques</h3>
             <div className="type-filters">
-              {gameTypes.map(type => (
+              {MECHANICS.map(m => (
                 <button
-                  key={type}
-                  className={`type-filter ${selectedTypes.includes(type) ? 'active' : ''}`}
-                  onClick={() => toggleTypeFilter(type)}
+                  key={m.id}
+                  className={`type-filter ${selectedTypes.includes(m.id) ? 'active' : ''}`}
+                  onClick={() => toggleTypeFilter(m.id)}
                 >
-                  {type}
+                  {m.emoji} {m.label}
                 </button>
               ))}
             </div>
@@ -96,7 +111,16 @@ export default function Catalog() {
       </div>
 
       <div className="results-info">
-        {filteredGames.length} jeu{filteredGames.length !== 1 ? 'x' : ''} trouvé{filteredGames.length !== 1 ? 's' : ''}
+        {loading ? 'Chargement…' : (
+          <>
+            {filteredGames.length} jeu{filteredGames.length !== 1 ? 'x' : ''} trouvé{filteredGames.length !== 1 ? 's' : ''}
+            {liveGames && liveGames.length === 0 && (
+              <span style={{ marginLeft: 10, color: '#999', fontSize: 13 }}>
+                (catalogue par défaut — l'admin peut ajouter des jeux)
+              </span>
+            )}
+          </>
+        )}
       </div>
 
       <motion.div
@@ -111,17 +135,10 @@ export default function Catalog() {
               <GameCard game={game} />
             </motion.div>
           ))
-        ) : (
+        ) : !loading && (
           <div className="no-results">
             <p>Aucun jeu trouvé avec ces critères</p>
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedTypes([]);
-                setPlayerFilter(0);
-              }}
-              className="btn btn-primary"
-            >
+            <button onClick={resetFilters} className="btn btn-primary">
               Réinitialiser les filtres
             </button>
           </div>

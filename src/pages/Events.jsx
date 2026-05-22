@@ -1,7 +1,7 @@
 // src/pages/Events.jsx
 import React, { useState } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db, auth } from '../config/firebase';
+import { db } from '../config/firebase';
 import { motion } from 'framer-motion';
 import '../styles/pages/Events.css';
 

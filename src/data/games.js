@@ -1,4 +1,6 @@
 // src/data/games.js
+// Jeux "seed" en fallback si Firestore est vide.
+// Note: les IDs de mécaniques sont définis dans src/data/mechanics.js
 
 export const games = [
   {
@@ -9,8 +11,7 @@ export const games = [
     maxPlayers: 4,
     duration: "60-90 min",
     description: "Bâtissez et négociez pour dominer l'île de Catane. Un classique stratégique incontournable !",
-    types: ["stratégie", "négociation", "familial"],
-    complexity: "moyen"
+    types: ["strategie", "gestion"],
   },
   {
     id: 2,
@@ -20,8 +21,7 @@ export const games = [
     maxPlayers: 5,
     duration: "45-60 min",
     description: "Construisez un réseau ferroviaire à travers le monde et complétez vos trajets.",
-    types: ["stratégie", "familial", "collection"],
-    complexity: "facile"
+    types: ["strategie", "draft"],
   },
   {
     id: 3,
@@ -31,8 +31,7 @@ export const games = [
     maxPlayers: 6,
     duration: "45 min",
     description: "Construisez un royaume médiéval en plaçant des tuiles. Tactique et placement stratégique.",
-    types: ["stratégie", "familial", "placement"],
-    complexity: "facile"
+    types: ["strategie", "placement"],
   },
   {
     id: 4,
@@ -41,9 +40,8 @@ export const games = [
     minPlayers: 3,
     maxPlayers: 8,
     duration: "30 min",
-    description: "Devinez les associations d'idées des autres joueurs basées sur des illustrations magnifiques.",
-    types: ["party", "créatif", "ludique"],
-    complexity: "facile"
+    description: "Devinez les associations d'idées des autres joueurs à partir d'illustrations magnifiques.",
+    types: ["party", "narratif"],
   },
   {
     id: 5,
@@ -53,8 +51,7 @@ export const games = [
     maxPlayers: 7,
     duration: "60 min",
     description: "Développez une civilisation à travers différentes ères. Draft de cartes sophistiqué.",
-    types: ["stratégie", "complexe", "civilisation"],
-    complexity: "difficile"
+    types: ["strategie", "draft"],
   },
   {
     id: 6,
@@ -64,8 +61,7 @@ export const games = [
     maxPlayers: 8,
     duration: "15 min",
     description: "En tant que maître espion, faites deviner les mots secrets à votre équipe.",
-    types: ["party", "équipe", "rapide"],
-    complexity: "facile"
+    types: ["party", "enquete"],
   },
   {
     id: 7,
@@ -75,19 +71,17 @@ export const games = [
     maxPlayers: 4,
     duration: "45 min",
     description: "Travaillez ensemble pour arrêter des épidémies mondiales. Jeu coopératif intense.",
-    types: ["coopératif", "stratégie", "aventure"],
-    complexity: "moyen"
+    types: ["strategie", "narratif"],
   },
   {
     id: 8,
-    name: "Exploding Kittens",
-    emoji: "💣",
+    name: "Dominion",
+    emoji: "👑",
     minPlayers: 2,
-    maxPlayers: 5,
-    duration: "15 min",
-    description: "Un jeu de cartes chaotique et hilarant où les chatons explosifs règnent en maître.",
-    types: ["party", "rapide", "cartes"],
-    complexity: "facile"
+    maxPlayers: 4,
+    duration: "30 min",
+    description: "Construisez votre deck pour dominer le royaume. Le pionnier du deckbuilding.",
+    types: ["deckbuilding", "strategie"],
   },
   {
     id: 9,
@@ -97,8 +91,7 @@ export const games = [
     maxPlayers: 4,
     duration: "30 min",
     description: "Composez des motifs de carrelage magnifiques. Esthétique et stratégie combinées.",
-    types: ["stratégie", "familial", "placement"],
-    complexity: "facile"
+    types: ["strategie", "draft", "placement"],
   },
   {
     id: 10,
@@ -108,26 +101,26 @@ export const games = [
     maxPlayers: 4,
     duration: "30 min",
     description: "Devenez un marchand de gemmes prospère à la Renaissance. Gestion de ressources élégante.",
-    types: ["stratégie", "économie", "familial"],
-    complexity: "moyen"
-  }
-];
-
-export const gameTypes = [
-  "stratégie",
-  "party",
-  "familial",
-  "coopératif",
-  "rapide",
-  "complexe",
-  "créatif",
-  "équipe",
-  "placement",
-  "cartes",
-  "négociation",
-  "civilisation",
-  "aventure",
-  "collection",
-  "économie",
-  "ludique"
+    types: ["gestion", "strategie"],
+  },
+  {
+    id: 11,
+    name: "Welcome To",
+    emoji: "🏘️",
+    minPlayers: 1,
+    maxPlayers: 100,
+    duration: "25 min",
+    description: "Concevez votre quartier idéal des années 50. Un Roll & Write moderne et accessible.",
+    types: ["roll-write"],
+  },
+  {
+    id: 12,
+    name: "Sherlock Holmes Détective Conseil",
+    emoji: "🔍",
+    minPlayers: 1,
+    maxPlayers: 8,
+    duration: "120 min",
+    description: "Résolvez des enquêtes complexes en parcourant Londres et en interrogeant des suspects.",
+    types: ["enquete", "narratif"],
+  },
 ];

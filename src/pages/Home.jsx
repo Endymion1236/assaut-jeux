@@ -9,7 +9,6 @@ import GameCard from '../components/GameCard';
 import '../styles/pages/Home.css';
 
 export default function Home({ user }) {
-  const [userPreferences, setUserPreferences] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +18,6 @@ export default function Home({ user }) {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           const prefs = userDoc.data().preferences || [];
-          setUserPreferences(prefs);
           const recs = getRecommendationsWithReasons(3, prefs);
           setRecommendations(recs);
         }

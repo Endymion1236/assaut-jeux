@@ -1,5 +1,5 @@
-// src/components/Header.jsx - MIS À JOUR avec Admin
-import React from 'react';
+// src/components/Header.jsx
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
@@ -7,7 +7,7 @@ import { Menu, X } from 'lucide-react';
 import '../styles/components/Header.css';
 
 export default function Header({ user, isAdmin = false }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -20,37 +20,40 @@ export default function Header({ user, isAdmin = false }) {
 
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="logo">
-          🎲 À l'assaut des jeux
+        <Link to="/" className="logo" onClick={closeMobileMenu}>
+          <img src="/logo-mark-80.png" alt="ALADJ" className="logo-img" />
+          <span className="logo-text">À l'assaut des jeux</span>
         </Link>
 
         <button
           className="mobile-menu-btn"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Menu"
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         <nav className={`nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          <Link to="/" className={`nav-link ${isActive('/')}`}>
+          <Link to="/" className={`nav-link ${isActive('/')}`} onClick={closeMobileMenu}>
             🏠 Accueil
           </Link>
-          <Link to="/catalog" className={`nav-link ${isActive('/catalog')}`}>
+          <Link to="/catalog" className={`nav-link ${isActive('/catalog')}`} onClick={closeMobileMenu}>
             📚 Catalogue
           </Link>
-          <Link to="/events" className={`nav-link ${isActive('/events')}`}>
+          <Link to="/events" className={`nav-link ${isActive('/events')}`} onClick={closeMobileMenu}>
             📅 Soirées
           </Link>
-          <Link to="/profile" className={`nav-link ${isActive('/profile')}`}>
+          <Link to="/profile" className={`nav-link ${isActive('/profile')}`} onClick={closeMobileMenu}>
             👤 Profil
           </Link>
-          
-          {/* Lien Admin visible seulement pour les admins */}
+
           {isAdmin && (
-            <Link to="/admin" className={`nav-link admin-link ${isActive('/admin')}`}>
+            <Link to="/admin" className={`nav-link admin-link ${isActive('/admin')}`} onClick={closeMobileMenu}>
               ⚙️ Admin
             </Link>
           )}

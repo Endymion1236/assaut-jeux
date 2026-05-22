@@ -1,80 +1,93 @@
 // src/utils/gameRecommendations.js
-import { games } from '../data/games';
+import { games as seedGames } from '../data/games';
 
 /**
  * Algorithme de recommandation basé sur :
- * - Nombre de joueurs
- * - Préférences de l'utilisateur
- * - Types de jeux favoris
+ * - Mécaniques préférées (poids fort)
+ * - Disponibilité selon le nombre de joueurs (filtre dur)
+ *
+ * Signature flexible :
+ *   getGameRecommendations(playerCountOrMaxResults, userPreferences, maxResults, gamesPool)
+ *
+ * Pour rester compatible avec l'appel actuel `getRecommendationsWithReasons(3, prefs)`
+ * (où 3 = nombre de recommandations souhaitées, pas de joueurs),
+ * on accepte aussi d'utiliser le premier argument comme limite.
  */
-export function getGameRecommendations(playerCount, userPreferences = [], maxResults = 5) {
-  if (!playerCount || playerCount < 2) return [];
+export function getGameRecommendations({
+  playerCount = null,
+  userPreferences = [],
+  maxResults = 5,
+  pool = seedGames,
+} = {}) {
+  let candidates = pool;
 
-  const scoredGames = games
-    .filter(game => playerCount >= game.minPlayers && playerCount <= game.maxPlayers)
-    .map(game => {
-      let score = 0;
+  // Filtre dur sur le nombre de joueurs si fourni
+  if (playerCount && playerCount >= 1) {
+    candidates = candidates.filter(g =>
+      playerCount >= (g.minPlayers || 1) &&
+      playerCount <= (g.maxPlayers || 99)
+    );
+  }
 
-      // Points bonus pour chaque type de préférence correspondant
-      game.types.forEach(type => {
-        if (userPreferences.includes(type)) {
-          score += 3;
-        }
-      });
+  // Scoring par recouvrement avec les préférences
+  const scored = candidates.map(game => {
+    let score = 0;
+    const types = game.types || [];
 
-      // Points bonus pour le nombre idéal de joueurs
-      if (playerCount >= 3 && playerCount <= 4) score += 2;
-      if (playerCount === 2) score += 1;
+    // +3 par mécanique commune avec les préférences
+    types.forEach(t => {
+      if (userPreferences.includes(t)) score += 3;
+    });
 
-      // Réduire les jeux trop complexes si peu de préférences
-      if (game.complexity === 'difficile' && userPreferences.length < 2) {
-        score -= 1;
-      }
+    // Petit bonus si toutes les préférences sont couvertes
+    if (userPreferences.length > 0 &&
+        userPreferences.every(p => types.includes(p))) {
+      score += 2;
+    }
 
-      // Boost les jeux rapides pour les petits groupes
-      if (playerCount <= 2 && game.types.includes('rapide')) {
-        score += 1;
-      }
+    return { ...game, matchScore: score };
+  });
 
-      return {
-        ...game,
-        matchScore: Math.max(0, score)
-      };
-    })
-    .sort((a, b) => b.matchScore - a.matchScore)
-    .slice(0, maxResults);
+  // Tri : score décroissant, puis nom alphabétique pour stabiliser
+  scored.sort((a, b) => b.matchScore - a.matchScore || a.name.localeCompare(b.name));
 
-  return scoredGames;
+  return scored.slice(0, maxResults);
 }
 
 /**
- * Obtient les jeux recommandés avec des explications
+ * Variante avec un % de matching pour l'affichage des cartes.
+ * Signature historique : getRecommendationsWithReasons(maxResults, userPreferences)
  */
-export function getRecommendationsWithReasons(playerCount, userPreferences = []) {
-  const recommendations = getGameRecommendations(playerCount, userPreferences);
+export function getRecommendationsWithReasons(maxResults = 3, userPreferences = [], pool) {
+  const recs = getGameRecommendations({
+    userPreferences,
+    maxResults,
+    pool: pool || seedGames,
+  });
 
-  return recommendations.map((game, index) => ({
+  return recs.map((game, index) => ({
     ...game,
     matchPercentage: game.matchScore > 0 ? Math.min(100, game.matchScore * 20) : 0,
-    reason: index === 0 ? '⭐ Coup de cœur' : `📌 Recommandé pour vous`
+    reason: index === 0 ? '⭐ Coup de cœur' : '📌 Recommandé pour toi',
   }));
 }
 
 /**
- * Obtient les jeux filtrés par type
+ * Filtre simple par mécanique
  */
-export function getGamesByType(type) {
-  return games.filter(game => game.types.includes(type));
+export function getGamesByType(type, pool = seedGames) {
+  return pool.filter(g => (g.types || []).includes(type));
 }
 
 /**
- * Recherche les jeux par nom ou description
+ * Recherche par nom + description + mécanique
  */
-export function searchGames(query) {
-  const lowerQuery = query.toLowerCase();
-  return games.filter(game =>
-    game.name.toLowerCase().includes(lowerQuery) ||
-    game.description.toLowerCase().includes(lowerQuery) ||
-    game.types.some(type => type.toLowerCase().includes(lowerQuery))
+export function searchGames(query, pool = seedGames) {
+  if (!query) return pool;
+  const q = query.toLowerCase();
+  return pool.filter(g =>
+    (g.name || '').toLowerCase().includes(q) ||
+    (g.description || '').toLowerCase().includes(q) ||
+    (g.types || []).some(t => t.toLowerCase().includes(q))
   );
 }

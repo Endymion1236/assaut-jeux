@@ -1,10 +1,11 @@
-// src/App.jsx - MIS À JOUR avec Admin
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 
 import Header from './components/Header';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
@@ -15,15 +16,16 @@ import Admin from './pages/Admin';
 
 import './styles/App.css';
 
+// Emails autorisés à accéder à l'admin
+const ADMIN_EMAILS = [
+  'admin@assaut-des-jeux.fr',
+  // nicolasrichard16@hotmail.com
+];
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Liste des admins (à adapter selon ton besoin)
-  const ADMIN_EMAILS = [
-    'admin@assaut-des-jeux.fr',
-    'nicolas@centre-equestre.fr' // Remplace avec ton email
-  ];
+  const [showLogin, setShowLogin] = useState(false);
 
   const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
 
@@ -31,8 +33,8 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
+      if (user) setShowLogin(false);
     });
-
     return unsubscribe;
   }, []);
 
@@ -45,32 +47,32 @@ function App() {
     );
   }
 
+  // Pas connecté : présentation publique + login à la demande
+  if (!currentUser) {
+    if (showLogin) {
+      return <Login onBack={() => setShowLogin(false)} />;
+    }
+    return <Landing onLoginClick={() => setShowLogin(true)} />;
+  }
+
+  // Connecté : app complète
   return (
     <Router>
-      {currentUser ? (
-        <>
-          <Header user={currentUser} isAdmin={isAdmin} />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<Home user={currentUser} />} />
-              <Route path="/profile" element={<Profile user={currentUser} />} />
-              <Route path="/events" element={<Events user={currentUser} />} />
-              <Route path="/events/:eventId" element={<EventDetail user={currentUser} />} />
-              <Route path="/catalog" element={<Catalog user={currentUser} />} />
-              
-              {/* Route Admin protégée */}
-              <Route
-                path="/admin"
-                element={isAdmin ? <Admin user={currentUser} /> : <Navigate to="/" replace />}
-              />
-              
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </>
-      ) : (
-        <Login />
-      )}
+      <Header user={currentUser} isAdmin={isAdmin} />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home user={currentUser} />} />
+          <Route path="/profile" element={<Profile user={currentUser} />} />
+          <Route path="/events" element={<Events user={currentUser} />} />
+          <Route path="/events/:eventId" element={<EventDetail user={currentUser} />} />
+          <Route path="/catalog" element={<Catalog user={currentUser} />} />
+          <Route
+            path="/admin"
+            element={isAdmin ? <Admin user={currentUser} /> : <Navigate to="/" replace />}
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
     </Router>
   );
 }

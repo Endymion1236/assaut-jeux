@@ -1,10 +1,11 @@
 // src/pages/Admin.jsx
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { searchBoardGame, getBoardGameDetails, convertMechanicsToTypes, formatPlayingTime } from '../services/boardGameGeekAPI';
+import { MECHANICS, getMechanicLabel, getMechanicEmoji } from '../data/mechanics';
 import { motion } from 'framer-motion';
-import { Trash2, Edit2, Plus, Search } from 'lucide-react';
+import { Trash2, Edit2, Plus } from 'lucide-react';
 import '../styles/pages/Admin.css';
 
 export default function Admin({ user }) {
@@ -26,7 +27,14 @@ export default function Admin({ user }) {
     bggId: ''
   });
 
-  const [typeInput, setTypeInput] = useState('');
+  const toggleMechanic = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      types: prev.types.includes(id)
+        ? prev.types.filter(t => t !== id)
+        : [...prev.types, id]
+    }));
+  };
 
   // Charge les jeux
   useEffect(() => {
@@ -72,7 +80,7 @@ export default function Admin({ user }) {
     setSearching(true);
     try {
       const details = await getBoardGameDetails(bggGame.id);
-      const types = convertMechanicsToTypes(details.mechanics);
+      const types = convertMechanicsToTypes(details.mechanics, details.categories);
       
       setFormData(prev => ({
         ...prev,
@@ -100,24 +108,6 @@ export default function Admin({ user }) {
     setFormData(prev => ({
       ...prev,
       [name]: name === 'minPlayers' || name === 'maxPlayers' ? parseInt(value) : value
-    }));
-  };
-
-  // Ajoute/modifie un type
-  const addType = () => {
-    if (typeInput.trim() && !formData.types.includes(typeInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        types: [...prev.types, typeInput.trim()]
-      }));
-      setTypeInput('');
-    }
-  };
-
-  const removeType = (type) => {
-    setFormData(prev => ({
-      ...prev,
-      types: prev.types.filter(t => t !== type)
     }));
   };
 
@@ -331,37 +321,26 @@ export default function Admin({ user }) {
             </div>
 
             <div className="form-group">
-              <label>Types de jeu</label>
-              <div className="type-input-group">
-                <input
-                  type="text"
-                  value={typeInput}
-                  onChange={(e) => setTypeInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addType())}
-                  placeholder="Ajouter un type (stratégie, party, etc.)"
-                />
-                <button
-                  type="button"
-                  className="btn-small"
-                  onClick={addType}
-                >
-                  + Ajouter
-                </button>
-              </div>
-
-              <div className="types-list">
-                {formData.types.map(type => (
-                  <span key={type} className="type-tag">
-                    {type}
-                    <button
-                      type="button"
-                      onClick={() => removeType(type)}
-                      className="remove-type"
+              <label>Mécaniques de jeu</label>
+              <p className="form-hint">Coche les mécaniques principales du jeu (idéalement 1 à 4) :</p>
+              <div className="mechanics-grid">
+                {MECHANICS.map(m => {
+                  const checked = formData.types.includes(m.id);
+                  return (
+                    <label
+                      key={m.id}
+                      className={`mechanic-chip ${checked ? 'checked' : ''}`}
                     >
-                      ✕
-                    </button>
-                  </span>
-                ))}
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleMechanic(m.id)}
+                      />
+                      <span className="mechanic-emoji">{m.emoji}</span>
+                      <span className="mechanic-label">{m.label}</span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
@@ -421,7 +400,9 @@ export default function Admin({ user }) {
                     <span>⏱️ {game.duration}</span>
                     <div className="types-inline">
                       {game.types?.map(type => (
-                        <span key={type} className="type-mini">{type}</span>
+                        <span key={type} className="type-mini">
+                          {getMechanicEmoji(type)} {getMechanicLabel(type)}
+                        </span>
                       ))}
                     </div>
                   </div>

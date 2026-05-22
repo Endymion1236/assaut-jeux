@@ -1,21 +1,19 @@
 // src/components/GameCard.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../config/firebase';
 import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getMechanicLabel, getMechanicEmoji } from '../data/mechanics';
 import '../styles/components/GameCard.css';
 
 export default function GameCard({ game, showMatch = false }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    checkFavorite();
-  }, [game.id]);
-
-  const checkFavorite = async () => {
+  const checkFavorite = useCallback(async () => {
     try {
+      if (!auth.currentUser) return;
       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
       if (userDoc.exists()) {
         const favorites = userDoc.data().favorites || [];
@@ -24,10 +22,15 @@ export default function GameCard({ game, showMatch = false }) {
     } catch (error) {
       console.error('Erreur:', error);
     }
-  };
+  }, [game.id]);
+
+  useEffect(() => {
+    checkFavorite();
+  }, [checkFavorite]);
 
   const toggleFavorite = async (e) => {
     e.preventDefault();
+    if (!auth.currentUser) return;
     setLoading(true);
 
     try {
@@ -84,9 +87,9 @@ export default function GameCard({ game, showMatch = false }) {
       </div>
 
       <div className="game-types">
-        {game.types.map(type => (
+        {(game.types || []).map(type => (
           <span key={type} className="type-badge">
-            {type}
+            {getMechanicEmoji(type)} {getMechanicLabel(type)}
           </span>
         ))}
       </div>

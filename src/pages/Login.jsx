@@ -10,7 +10,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import '../styles/pages/Login.css';
 
-export default function Login() {
+export default function Login({ onBack }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,17 +52,40 @@ export default function Login() {
         });
       }
     } catch (err) {
-      setError(err.message);
+      setError(translateAuthError(err));
     } finally {
       setLoading(false);
     }
   };
 
+  // Traduit les codes d'erreur Firebase en messages lisibles
+  const translateAuthError = (err) => {
+    const code = err?.code || '';
+    const map = {
+      'auth/invalid-email': 'Adresse email invalide.',
+      'auth/user-disabled': 'Ce compte a été désactivé.',
+      'auth/user-not-found': 'Aucun compte ne correspond à cet email.',
+      'auth/wrong-password': 'Mot de passe incorrect.',
+      'auth/invalid-credential': 'Email ou mot de passe incorrect.',
+      'auth/email-already-in-use': 'Un compte existe déjà avec cet email.',
+      'auth/weak-password': 'Mot de passe trop faible (6 caractères minimum).',
+      'auth/network-request-failed': 'Problème de connexion réseau.',
+      'auth/too-many-requests': 'Trop de tentatives, réessayez plus tard.',
+    };
+    return map[code] || err?.message || 'Une erreur est survenue.';
+  };
+
   return (
     <motion.div className="login-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <motion.div className="login-card" initial={{ y: 20 }} animate={{ y: 0 }}>
-        <h1 className="login-title">🎲 À l'assaut des jeux</h1>
-        <p className="login-subtitle">Plateforme de jeux de société</p>
+        {onBack && (
+          <button type="button" className="link-btn back-btn" onClick={onBack}>
+            ← Retour
+          </button>
+        )}
+        <img src="/logo-mark-128.png" alt="ALADJ" className="login-logo" />
+        <h1 className="login-title">À l'assaut des jeux</h1>
+        <p className="login-subtitle">L'asso des joueurs du Coutançais</p>
 
         {error && (
           <motion.div className="error-message" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -80,6 +103,8 @@ export default function Login() {
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Ton pseudo de joueur"
                 disabled={loading}
+                required
+                minLength={2}
               />
             </div>
           )}
@@ -92,6 +117,8 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ton@email.com"
               disabled={loading}
+              required
+              autoComplete="email"
             />
           </div>
 
@@ -103,6 +130,9 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               disabled={loading}
+              required
+              minLength={6}
+              autoComplete={isLogin ? 'current-password' : 'new-password'}
             />
           </div>
 
