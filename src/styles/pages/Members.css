@@ -1,0 +1,264 @@
+/* src/styles/pages/Members.css */
+
+.members-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* === HEADER === */
+.members-header {
+  margin-bottom: 28px;
+}
+
+.members-header h1 {
+  color: var(--navy);
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.members-header h1 svg {
+  color: var(--teal);
+}
+
+.members-header p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.members-header a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.members-header a:hover {
+  text-decoration: underline;
+}
+
+/* === FILTRES === */
+.members-filters {
+  background: white;
+  padding: 18px 20px;
+  border-radius: 14px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+}
+
+.search-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-wrapper svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.member-search {
+  width: 100%;
+  padding: 11px 14px 11px 42px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  background: var(--bg-alt);
+  transition: all 0.15s;
+}
+
+.member-search:focus {
+  outline: none;
+  border-color: var(--teal);
+  background: white;
+}
+
+.mechanic-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mechanic-chip-filter {
+  padding: 7px 14px;
+  background: var(--bg-alt);
+  border: 1.5px solid transparent;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.mechanic-chip-filter:hover {
+  background: white;
+  border-color: var(--border);
+}
+
+.mechanic-chip-filter.active {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+
+/* === COMPTEUR === */
+.members-count {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+/* === EMPTY === */
+.members-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.members-empty p {
+  margin-bottom: 8px;
+}
+
+.members-empty strong {
+  color: var(--navy);
+}
+
+/* === GRID === */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* === MEMBER CARD === */
+.member-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.member-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.member-card.is-me {
+  border: 2px solid var(--teal);
+}
+
+.member-avatar-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+.member-avatar-letter,
+.member-avatar-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--navy-light) 100%);
+  flex-shrink: 0;
+}
+
+.member-avatar-img {
+  object-fit: cover;
+}
+
+.me-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--yellow);
+  color: var(--navy-dark);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.member-body {
+  flex: 1;
+}
+
+.member-name {
+  color: var(--navy);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.member-bio {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.member-prefs small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.prefs-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.pref-tag-mini {
+  background: var(--bg-alt);
+  color: var(--navy);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* === MOBILE === */
+@media (max-width: 600px) {
+  .members-header h1 {
+    font-size: 24px;
+  }
+
+  .members-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mechanic-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+}

@@ -14,6 +14,7 @@ import Catalog from './pages/Catalog';
 import EventDetail from './pages/EventDetail';
 import GameDetail from './pages/GameDetail';
 import About from './pages/About';
+import Members from './pages/Members';
 import Admin from './pages/Admin';
 
 import './styles/App.css';
@@ -74,6 +75,7 @@ function App() {
           <Route path="/events/:eventId" element={<EventDetail user={currentUser} />} />
           <Route path="/catalog" element={<Catalog user={currentUser} />} />
           <Route path="/games/:gameId" element={<GameDetail user={currentUser} />} />
+          <Route path="/membres" element={<Members user={currentUser} />} />
           <Route path="/a-propos" element={<About />} />
           <Route
             path="/admin"

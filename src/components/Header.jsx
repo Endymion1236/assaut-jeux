@@ -47,6 +47,9 @@ export default function Header({ user, isAdmin = false }) {
           <Link to="/events" className={`nav-link ${isActive('/events')}`} onClick={closeMobileMenu}>
             📅 Soirées
           </Link>
+          <Link to="/membres" className={`nav-link ${isActive('/membres')}`} onClick={closeMobileMenu}>
+            👥 Membres
+          </Link>
           <Link to="/profile" className={`nav-link ${isActive('/profile')}`} onClick={closeMobileMenu}>
             👤 Profil
           </Link>
