@@ -234,3 +234,42 @@
   background: var(--teal);
   color: white;
 }
+
+/* === LIEN TITRE + DÉTAILS === */
+.event-title-link {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+}
+
+.event-title-link:hover h3 {
+  color: var(--teal);
+}
+
+.event-fixed-game-mini {
+  background: linear-gradient(135deg, rgba(43, 160, 152, 0.06) 0%, rgba(242, 181, 58, 0.08) 100%);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--text);
+  border-left: 3px solid var(--yellow);
+}
+
+.event-fixed-game-mini strong {
+  color: var(--navy);
+}
+
+.event-detail-link {
+  display: inline-block;
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  padding-top: 4px;
+  transition: transform 0.15s;
+}
+
+.event-detail-link:hover {
+  text-decoration: underline;
+  transform: translateX(4px);
+}

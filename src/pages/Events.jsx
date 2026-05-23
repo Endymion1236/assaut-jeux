@@ -1,5 +1,6 @@
 // src/pages/Events.jsx
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   collection,
   addDoc,
@@ -319,7 +320,9 @@ function EventCard({ event, user, isAdmin, loading, onJoin, onLeave, onDelete, i
       animate={{ opacity: 1, y: 0 }}
     >
       <div className="event-card-header">
-        <h3>{event.name}</h3>
+        <Link to={`/events/${event.id}`} className="event-title-link">
+          <h3>{event.name}</h3>
+        </Link>
         {canDelete && (
           <button
             className="event-delete"
@@ -364,6 +367,16 @@ function EventCard({ event, user, isAdmin, loading, onJoin, onLeave, onDelete, i
           <strong>Participants :</strong> {participantNames.join(', ')}
         </div>
       )}
+
+      {event.gameName && (
+        <div className="event-fixed-game-mini">
+          🎲 Jeu prévu : <strong>{event.gameName}</strong>
+        </div>
+      )}
+
+      <Link to={`/events/${event.id}`} className="event-detail-link">
+        Voir les détails →
+      </Link>
 
       {!isPast && user && (
         <div className="event-actions">

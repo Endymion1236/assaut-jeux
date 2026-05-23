@@ -71,7 +71,7 @@ function App() {
           <Route path="/" element={<Home user={currentUser} />} />
           <Route path="/profile" element={<Profile user={currentUser} />} />
           <Route path="/events" element={<Events user={currentUser} isAdmin={isAdmin} />} />
-          <Route path="/events/:eventId" element={<EventDetail user={currentUser} />} />
+          <Route path="/events/:eventId" element={<EventDetail user={currentUser} isAdmin={isAdmin} />} />
           <Route path="/catalog" element={<Catalog user={currentUser} />} />
           <Route path="/games/:gameId" element={<GameDetail user={currentUser} />} />
           <Route path="/membres" element={<Members user={currentUser} />} />
