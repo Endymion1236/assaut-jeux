@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { searchBoardGame, getBoardGameDetails, convertMechanicsToTypes, formatPlayingTime } from '../services/boardGameGeekAPI';
+import { translateToFrench } from '../services/translate';
 import { MECHANICS, getMechanicLabel, getMechanicEmoji } from '../data/mechanics';
 import { motion } from 'framer-motion';
 import { Trash2, Edit2, Plus } from 'lucide-react';
@@ -15,6 +16,7 @@ export default function Admin({ user }) {
   const [editingId, setEditingId] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [searching, setSearching] = useState(false);
+  const [translating, setTranslating] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -78,12 +80,14 @@ export default function Admin({ user }) {
   };
 
   // Récupère les infos d'un jeu BGG
+  // Récupère les infos d'un jeu BGG + traduit la description automatiquement
   const handleSelectBGGGame = async (bggGame) => {
     setSearching(true);
     try {
       const details = await getBoardGameDetails(bggGame.id);
       const types = convertMechanicsToTypes(details.mechanics, details.categories);
-      
+
+      // Pré-remplit avec la description en anglais
       setFormData(prev => ({
         ...prev,
         name: details.name,
@@ -98,6 +102,25 @@ export default function Admin({ user }) {
       }));
 
       setSearchResults([]);
+
+      // Traduit la description en arrière-plan
+      if (details.description) {
+        setTranslating(true);
+        try {
+          const translated = await translateToFrench(details.description, 'EN');
+          // Met à jour SEULEMENT si l'utilisateur n'a pas modifié entre-temps
+          setFormData(prev => {
+            if (prev.description === details.description) {
+              return { ...prev, description: translated };
+            }
+            return prev;
+          });
+        } catch (err) {
+          console.error('Erreur traduction:', err);
+        } finally {
+          setTranslating(false);
+        }
+      }
     } catch (error) {
       console.error('Erreur fetch détails:', error);
       alert('Erreur lors de la récupération des détails');
@@ -337,14 +360,24 @@ export default function Admin({ user }) {
             </div>
 
             <div className="form-group">
-              <label>Description</label>
+              <label>
+                Description
+                {translating && (
+                  <span className="translation-indicator">🌐 Traduction en cours…</span>
+                )}
+              </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Décrivez le jeu..."
-                rows={3}
+                rows={4}
               />
+              {!translating && formData.bggId && (
+                <small className="form-hint">
+                  💡 Traduction automatique via DeepL. Tu peux corriger si besoin.
+                </small>
+              )}
             </div>
 
             <div className="form-group">
