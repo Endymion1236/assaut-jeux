@@ -1,0 +1,31 @@
+{
+  "short_name": "ALADJ",
+  "name": "À l'assaut des jeux — ALADJ",
+  "description": "L'asso des passionnés de jeux de société du Coutançais",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1A3A5C",
+  "background_color": "#1A3A5C",
+  "orientation": "portrait-primary",
+  "categories": ["entertainment", "games", "social"],
+  "lang": "fr-FR"
+}

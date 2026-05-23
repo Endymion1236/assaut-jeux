@@ -15,6 +15,7 @@ import EventDetail from './pages/EventDetail';
 import GameDetail from './pages/GameDetail';
 import About from './pages/About';
 import Members from './pages/Members';
+import Matchmaker from './pages/Matchmaker';
 import Admin from './pages/Admin';
 
 import './styles/App.css';
@@ -55,7 +56,6 @@ function App() {
     );
   }
 
-  // Pas connecté : présentation publique + login à la demande
   if (!currentUser) {
     if (showLogin) {
       return <Login onBack={() => setShowLogin(false)} />;
@@ -63,7 +63,6 @@ function App() {
     return <Landing onLoginClick={() => setShowLogin(true)} />;
   }
 
-  // Connecté : app complète
   return (
     <Router>
       <Header user={currentUser} isAdmin={isAdmin} />
@@ -76,6 +75,7 @@ function App() {
           <Route path="/catalog" element={<Catalog user={currentUser} />} />
           <Route path="/games/:gameId" element={<GameDetail user={currentUser} />} />
           <Route path="/membres" element={<Members user={currentUser} />} />
+          <Route path="/quel-jeu" element={<Matchmaker user={currentUser} />} />
           <Route path="/a-propos" element={<About />} />
           <Route
             path="/admin"

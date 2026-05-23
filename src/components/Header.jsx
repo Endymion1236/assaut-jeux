@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Download } from 'lucide-react';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 import '../styles/components/Header.css';
 
 export default function Header({ user, isAdmin = false }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { canInstall, promptInstall } = usePWAInstall();
 
   const handleLogout = async () => {
     try {
@@ -44,6 +46,9 @@ export default function Header({ user, isAdmin = false }) {
           <Link to="/catalog" className={`nav-link ${isActive('/catalog')}`} onClick={closeMobileMenu}>
             📚 Catalogue
           </Link>
+          <Link to="/quel-jeu" className={`nav-link ${isActive('/quel-jeu')}`} onClick={closeMobileMenu}>
+            ✨ Quel jeu ?
+          </Link>
           <Link to="/events" className={`nav-link ${isActive('/events')}`} onClick={closeMobileMenu}>
             📅 Soirées
           </Link>
@@ -52,9 +57,6 @@ export default function Header({ user, isAdmin = false }) {
           </Link>
           <Link to="/profile" className={`nav-link ${isActive('/profile')}`} onClick={closeMobileMenu}>
             👤 Profil
-          </Link>
-          <Link to="/a-propos" className={`nav-link ${isActive('/a-propos')}`} onClick={closeMobileMenu}>
-            ℹ️ À propos
           </Link>
 
           {isAdmin && (
@@ -65,6 +67,15 @@ export default function Header({ user, isAdmin = false }) {
         </nav>
 
         <div className="header-right">
+          {canInstall && (
+            <button
+              onClick={promptInstall}
+              className="install-btn"
+              title="Installer l'app sur ton appareil"
+            >
+              <Download size={14} /> Installer
+            </button>
+          )}
           <div className="user-info">
             <span className="user-avatar">{user?.displayName?.charAt(0).toUpperCase()}</span>
             <span className="user-name">{user?.displayName}</span>
